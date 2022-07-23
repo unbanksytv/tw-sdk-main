@@ -1,5 +1,6 @@
 import { useNFTs, ThirdwebNftMedia, useMarketplace, useBuyNow, useActiveListings } from '@thirdweb-dev/react';
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import styles from "../../styles/Home.module.css";
 
 export default function Marketplace() {
     const marketplace = useMarketplace("0x3Fe6cfeb8530B3283c4d3E276BCC418FFdc0b748");

@@ -24,8 +24,13 @@ export default function Listings() {
 const Container = tw.div`
  w-screen
  h-screen
- px-7
+ px-9
+ p-3
+ justify-between
+ text-white
+ bg-gradient-color
+ text-white
+ text-center
  flex
  flex-col
- justify-between
 `
