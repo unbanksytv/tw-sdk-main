@@ -12,30 +12,21 @@ import {
   import styles from "../../styles/Home.module.css";
   
   const ListingPage: NextPage = () => {
-    // Next JS Router hook to redirect to other pages and to grab the query from the URL (listingId)
     const router = useRouter();
-  
-    // De-construct listingId out of the router.query.
-    // This means that if the user visits /listing/0 then the listingId will be 0.
-    // If the user visits /listing/1 then the listingId will be 1.
     const { listingId } = router.query as { listingId: string };
   
-    // Hooks to detect user is on the right network and switch them if they are not
     const networkMismatch = useNetworkMismatch();
     const [, switchNetwork] = useNetwork();
   
-    // Initialize the marketplace contract
     const marketplace = useMarketplace(
-      "0x3Fe6cfeb8530B3283c4d3E276BCC418FFdc0b748" // Your marketplace contract address here
+      "0x3Fe6cfeb8530B3283c4d3E276BCC418FFdc0b748" 
     );
   
-    // Fetch the listing from the marketplace contract
     const { data: listing, isLoading: loadingListing } = useListing(
       marketplace,
       listingId
     );
   
-    // Store the bid amount the user entered into the bidding textbox
     const [bidAmount, setBidAmount] = useState<string>("");
   
     if (loadingListing) {
@@ -48,23 +39,20 @@ import {
   
     async function createBidOrOffer() {
       try {
-        // Ensure user is on the correct network
         if (networkMismatch) {
           switchNetwork && switchNetwork(4);
           return;
         }
   
-        // If the listing type is a direct listing, then we can create an offer.
         if (listing?.type === ListingType.Direct) {
           await marketplace?.direct.makeOffer(
-            listingId, // The listingId of the listing we want to make an offer for
-            1, // Quantity = 1
-            NATIVE_TOKENS[ChainId.Rinkeby].wrapped.address, // Wrapped Ether address on Rinkeby
-            bidAmount // The offer amount the user entered
+            listingId, 
+            1, 
+            NATIVE_TOKENS[ChainId.Rinkeby].wrapped.address, 
+            bidAmount 
           );
         }
   
-        // If the listing type is an auction listing, then we can create a bid.
         if (listing?.type === ListingType.Auction) {
           await marketplace?.auction.makeBid(listingId, bidAmount);
         }
@@ -82,13 +70,11 @@ import {
   
     async function buyNft() {
       try {
-        // Ensure user is on the correct network
         if (networkMismatch) {
           switchNetwork && switchNetwork(4);
           return;
         }
   
-        // Simple one-liner for buying the NFT
         await marketplace?.buyoutListing(listingId, 1);
         alert("NFT bought successfully!");
       } catch (error) {
